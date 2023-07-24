@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+  <title>Attendance Report - Examination Attendance System</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+
+<body>
+	  <div th:replace="fragments/header :: header"></div>
+	
+    
+	  <div id = "Attendance" class="container-fluid" style="max-width: 900px; margin: 0 auto;">
+	    <h2 class="text-center"><b style = "font-family: 'Rockwell';">Attendance Report</b></h2>
+	  </div>
+			  
+	    <style>
+		  .table-spacing td {
+		    padding: 10px; /* Adjust the value as per your preference */
+		  }
+		</style>
+		
+		<div style="text-align: center;">
+		  <table class="table-spacing">
+		    <tbody>
+		      <tr th:each="student, iteration : ${studentAttendance}" th:if="${iteration.index == 0}">
+		        <td style="text-align: right;">Subject Code:<br>Subject Name:</td>
+		        <td style="text-align: left;"><b>[[${student.getExamination().getSubject().getSubjectCode}]]</b><br><b>[[${student.getExamination().getSubject().getSubjectName}]]</b></td>
+		      </tr>
+		    </tbody>
+		  </table>
+		</div>
+	  <div style="text-align: center;">
+	 	 <p><b>Student Attend</b></p>
+	 	  <label> Total Student Attend: </label>
+	 	 <span th:text= "${studentAttendance.size()}"></span>
+	  </div>
+	  
+	  <div id = "TABLES" th:if="${studentAttendance.size() > 0}">
+      <table class="table table-bordered table-l  table-hover " style = "position: auto">
+        <thead class="thead-light">
+          <tr>
+           
+<!--             <th scope="col">Subject Code</th> -->
+<!--             <th scope="col">Subject Name</th> -->
+            <th scope="col">Student Matric Number</th>
+            <th scope="col">Student Name</th>
+            <th scope="col">Student Course</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="student : ${studentAttendance}">
+<!--               	<td>[[${student.getExamination().getSubject().getSubjectCode}]]</td> -->
+<!--               	<td>[[${student.getExamination().getSubject().getSubjectName}]]</td> -->
+               	<td>[[${student.getStudentId().getStudentMatricNo()}]]</td>
+               	<td>[[${student.getStudentId().getStudentName()}]]</td>
+               	<td>[[${student.getStudentId().getStudentCourse()}]]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align: center;">
+	 	 <p><b>Student Absent</b></p>
+	 	  <label> Total Student Absent: </label>
+	 	 <span th:text= "${studentAbsent.size()}"></span>
+	  </div>
+      <div id = "TABLES" th:if="${studentAbsent.size() > 0}">
+      <table class="table table-bordered table-l  table-hover " style = "position: auto">
+        <thead class="thead-light">
+          <tr>
+	            <th scope="col">Student Matric Number</th>
+	            <th scope="col">Student Name</th>
+	            <th scope="col">Student Course</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="absent : ${studentAbsent}">
+               	<td>[[${absent.StudentMatricNo}]]</td>
+               	<td>[[${absent.StudentName}]]</td>
+               	<td>[[${absent.StudentCourse}]]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+	  
+	<div class="" th:unless="${studentAbsent.size() > 0}">
+      <span>No record found!</span>
+    </div>
+
+
+	 <input type="button" value="Print" class="btn btn-secondary btn-sm" onclick = "printDivContent()">
+	 
+	 <script>
+     function printDivContent() {
+            var contentOfDiv = document.getElementById("Attendance").innerHTML;
+            var contentOfDiv2 = document.getElementById("TABLES").innerHTML;
+            var newWin = window.open('', '', 'height=650, width=1250');
+ 			newWin.document.write(contentOfDiv);
+ 			newWin.document.write(contentOfDiv2);
+ 			newWin.document.close();
+            newWin.print();
+	}
+    </script>
+     
+    <div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>
+
+				

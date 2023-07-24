@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+  <title>Attendance By Venue - Examination Attendance System</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  
+  <!-- A script function for enable filter table in front-end -->
+  <script>
+  function filterAttendance(event){
+  	console.log(event.target.value)
+  	console.log(window.location)
+  	var searchParam = new URLSearchParams(window.location.search)
+  	searchParam.set('unitid', event.target.value) 
+	window.location.href = window.location.origin + window.location.pathname + '?' + searchParam.toString()
+  }
+  </script>
+  
+</head>
+
+<body>
+	  <div th:replace="fragments/header :: header"></div>
+	
+	  <div id = "AttendanceVenue" class="container-fluid" style="max-width: 900px; margin: 0 auto;">
+	    <h2 class="text-center"><b style = "font-family: 'Rockwell';">Attendance By Venue</b></h2>
+	  </div>
+	  
+	  <label>Search Venue: </label>
+	  <select name="venue" id="venue" onchange="filterAttendance(event)">
+	  	<option value="0">All</option>
+		<option th:each="Unit : ${examUnit}" 
+					th:value="${Unit.getUnitId()}"
+					th:text="${Unit.getUnitId()} + '-' + ${Unit.getUnitName()}"	 
+					th:selected="${selectedUnit == Unit.getUnitId()}"
+		/>
+	  </select>
+	 <br><br>
+	  
+	  <div id = "TABLES" th:if="${attendVenue.size() > 0}">
+      <table class="table table-bordered table-l  table-hover " style = "position: auto">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Attendance Id</th>
+            <th scope="col">Student Matric Number</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">Subject Code</th>
+            <th scope="col">Subject Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Input Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="attendVenue : ${attendVenue}">
+                <td scope="row" >[[${attendVenue.ExamAttendId}]]</td>
+               	<td>[[${attendVenue.getStudentId().getStudentMatricNo()}]]</td>
+               	<td th:text="${#dates.format(attendVenue.getExamination().getExaminationDate(), 'yyyy-MM-dd')}"></td>
+               	<td>[[${attendVenue.getExamination().getExaminationTime()}]]</td>
+               	<td>[[${attendVenue.getExamination().getSubject().getSubjectCode()}]]</td>
+               	<td>[[${attendVenue.getExamination().getSubject().getSubjectName()}]]</td>
+                <td>[[${attendVenue.ExamAttendStatus}]]</td>
+                <td>[[${attendVenue.InputType}]]</td> 
+               
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <label> Total records: </label>
+    <span th:text= "${attendVenue.size()}"></span>
+	
+	<br>
+	<input type="button" value="Print" class="btn btn-secondary btn-sm" onclick = "printDivContent()">
+	<div class="" th:unless="${attendVenue.size() > 0}">
+      <span>No record found!</span>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>
+
+<script>
+     function printDivContent() {
+            var contentOfDiv = document.getElementById("AttendanceVenue").innerHTML;
+            var contentOfDiv2 = document.getElementById("TABLES").innerHTML;
+            var newWin = window.open('', '', 'height=650, width=1250');
+ 			newWin.document.write(contentOfDiv);
+ 			newWin.document.write(contentOfDiv2);
+ 			newWin.document.close();
+            newWin.print();
+	}
+</script>
+
+				
