@@ -3,8 +3,11 @@ Group Project for BITP3123 Distributed Application Development
 Title: EXAMINATION ATTENDANCE SYSTEM IN PHYSICAL SPACE
 
 Course: BITS
+
 Year 2022/2023 Semester 2
+
 Group Number: 10
+
 Group Members:
 1. MOHD HAFIZ SUHAIZAL BIN ISMAIL [B032110132] S1G1
 2. NG WEI HEN [B032110201] S1G1
